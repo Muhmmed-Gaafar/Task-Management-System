@@ -30,6 +30,7 @@ class TaskController extends Controller
 
     public function store(TaskRequest $request): JsonResponse
     {
+
         $task = $this->taskService->create($request);
         return $this->success(new TaskResource($task), 'Task created successfully', 201);
     }
@@ -47,7 +48,9 @@ class TaskController extends Controller
         if ($task->user_id !== Auth::id()) {
             return $this->failed(null, 'Unauthorized access', 403);
         }
-
+        if ($task->assigned_to !== Auth::id() && !Auth::user()->is_admin) {
+            return $this->failed(null, 'Unauthorized access', 403);
+        }
         $this->taskService->update($task, $request);
         return $this->success(new TaskResource($task), 'Task updated successfully');
     }

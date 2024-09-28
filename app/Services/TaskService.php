@@ -15,6 +15,7 @@ class TaskService
 
     public function update(Task $task, TaskRequest $request)
     {
+
         $task->update($request->validated());
         return $task;
     }
